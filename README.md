@@ -41,7 +41,7 @@ Provides robust confidence fusion and threat-level scoring.
 # Extract Dataset
 ```
 $ 7z x samples_and_models.7z
-$ 7z x balanced_data.7z
+$ 7z x balanced_data.7z.001
 
 $ tree data/
 data/

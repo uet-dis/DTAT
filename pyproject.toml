@@ -6,9 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "hedge"
 version = "0.1.0"
 description = "HEDGE implementation"
-authors = [
-    {name = "Minh Quang Tran", email = "minhtran6464.lhp@gmail.com"}
-]
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
