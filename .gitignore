@@ -1,0 +1,14 @@
+*.pyc
+venv/
+__pycache__/
+*.egg-info/
+.conda/
+.vscode/
+catboost_info/
+build/
+data/
+resources/
+
+
+reports/
+samples_and_models.7z

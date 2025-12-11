@@ -1,0 +1,15 @@
+{
+    "num_round": 1200,
+    "early_stopping": 20,
+    "params": {
+        "eta": 0.08,
+        "max_depth": 8,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9,
+        "lambda": 1.0,
+        "alpha": 0.0,
+        "tree_method": "hist",
+        "eval_metric": "mlogloss",
+        "random_state": 42
+    }
+}

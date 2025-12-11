@@ -1,0 +1,9 @@
+{
+    "params": {
+        "learning_rate": 0.1,
+        "n_estimators": 300,
+        "max_depth": 3,
+        "subsample": 1.0,
+        "random_state": 42
+    }
+}

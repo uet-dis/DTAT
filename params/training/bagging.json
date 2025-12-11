@@ -1,0 +1,7 @@
+{
+    "params": {
+        "n_estimators": 30,
+        "max_samples": 1.0,
+        "max_features": 1.0
+    }
+}

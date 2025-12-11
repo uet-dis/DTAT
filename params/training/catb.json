@@ -1,0 +1,12 @@
+{
+    "params": {
+        "depth": 8,
+        "learning_rate": 0.08,
+        "l2_leaf_reg": 3.0,
+        "iterations": 2000,
+        "random_seed": 42,
+        "loss_function": "MultiClass",
+        "od_type": "Iter",
+        "od_wait": 50
+    }
+}

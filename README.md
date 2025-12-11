@@ -38,6 +38,30 @@ Resistant to instances that evade one model but not the other.
 
 Provides robust confidence fusion and threat-level scoring.
 
+# Extract Dataset
+```
+$ 7z x samples_and_models.7z
+$ 7z x balanced_data.7z
+
+$ tree data/
+data/
+├── cic2018_merged_train_raw_processed.csv
+├── cic2018_test_random_sample_clean_merged.csv
+├── nslkdd_merged_train_raw_processed.csv
+└── nslkdd_test_random_sample_clean_merged.csv
+
+$ tree resources/
+resources/
+├── CIC-2018
+│   ├── adv_samples
+│   │   ├── isolated (isolated adversarial set)
+│   │   ├── robust (hybrid adversarial set)
+│   │   └── test (adversarial testing set)
+│   └── models (trained models: original, isolated adv-trained, hybrid adv-trained)
+<similar with NSLKDD>
+```
+
+
 # Results Summary
 
 HEDGE achieves:
