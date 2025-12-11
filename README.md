@@ -47,3 +47,11 @@ HEDGE achieves:
 - Clean Accuracy: 99% (NSL-KDD) and 95% (CSE-CIC-IDS2018)
 
 - Large robustness gains from Hybrid Adversarial Training
+
+# Citing HEDGE
+
+@article{hedge2025,
+  title={HEDGE: A Gradient-Aware Hybrid Ensemble Defense Against Transferable Adversarial Evasion in Intrusion Detection and Prevention Systems},
+  author={Tuyen T. Nguyen, Minh Q. Tran, Hanh P. Du, Hai H. Le, and Hoa N. Nguyen},  
+  year={2025}
+}
