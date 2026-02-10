@@ -166,7 +166,7 @@ def main():
         # Evaluate on plain test
         logger.debug("[+] Evaluating on plain test set")
         y_plain_pred = _predict_indices(wrapper, X_plain)
-        metrics_plain = evaluate_classification(y_plain, y_plain_pred, class_names)
+        metrics_plain = evaluate_classification(y_plain, y_plain_pred, class_names, metric='weighted')
         plain_acc = float(metrics_plain.get('accuracy', 0.0))
         plain_f1 = float(metrics_plain.get('f1', 0.0))
 
@@ -206,7 +206,7 @@ def main():
             # Evaluate on adversarial test
             logger.debug(f"[+] Evaluating on adversarial test set [{tag}]")
             y_adv_pred = _predict_indices(wrapper, X_adv)
-            metrics_adv = evaluate_classification(y_adv, y_adv_pred, class_names)
+            metrics_adv = evaluate_classification(y_adv, y_adv_pred, class_names, metric='weighted')
 
             # Compute ASR restricted to plain-correct samples
             try:

@@ -230,7 +230,7 @@ def main():
             batch_size=args.batch_size,
             max_workers=args.max_workers,
         )
-        metrics_plain = evaluate_classification(y_plain, ensemble_pred_plain, class_names)
+        metrics_plain = evaluate_classification(y_plain, ensemble_pred_plain, class_names, metric='weighted')
         plain_acc = float(metrics_plain.get('accuracy', 0.0))
         plain_f1 = float(metrics_plain.get('f1', 0.0))
         plain_precision = float(metrics_plain.get('precision', 0.0))
@@ -321,7 +321,7 @@ def main():
 
         ensemble_proba_adv, ensemble_pred_adv = combine_weighted(proba_map, len(class_names), ENSEMBLE_WEIGHTS)
         y_adv_ref = adv_data[next(iter(adv_data))][1]
-        metrics_adv = evaluate_classification(y_adv_ref, ensemble_pred_adv, class_names)
+        metrics_adv = evaluate_classification(y_adv_ref, ensemble_pred_adv, class_names, metric='weighted')
 
         # ASR: restricted to samples correctly predicted by plain ensemble; require aligned length
         try:

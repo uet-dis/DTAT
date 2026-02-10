@@ -1,9 +1,9 @@
-# HEDGE: A Gradient-Aware Hybrid Ensemble Defense Against Transferable Adversarial Evasion in Intrusion Detection and Prevention Systems
-Codes and Datasets for A Gradient-Aware Hybrid Ensemble Defense Against Transferable Adversarial Evasion in Intrusion Detection and Prevention Systems
+# HEDGE: Defending AI-Powered Intrusion Detection Against Transferable Adversarial Evasion
+Codes and Datasets for Defending AI-Powered Intrusion Detection Against Transferable Adversarial Evasion
 
-This repository contains the source code, experiments, and processed datasets for the paper: "HEDGE: A Gradient-Aware Hybrid Ensemble Defense Against Transferable Adversarial Evasion in Intrusion Detection and Prevention Systems."
+This repository contains the source code, experiments, and processed datasets for the paper: "Defending AI-Powered Intrusion Detection Against Transferable Adversarial Evasion"
 
-HEDGE implements a hybrid ensemble defense that strengthens the robustness of modern Intrusion Detection and Prevention Systems (IDPSs) against transferable adversarial evasion attacks, especially those that exploit asymmetric vulnerabilities between deep learning (DL) and gradient-boosting tree (GBT) models.
+HEDGE implements a hybrid ensemble defense that strengthens the robustness of modern Intrusion Detection Systems (IDSs) against transferable adversarial evasion attacks, especially those that exploit asymmetric vulnerabilities between deep learning (DL) and gradient-boosting tree (GBT) models.
 
 # Key Features
 ## 1. Gradient-Aware Transferability Analysis
@@ -74,8 +74,8 @@ HEDGE achieves:
 
 # Citing HEDGE
 
-@article{hedge2025,
-  title={HEDGE: A Gradient-Aware Hybrid Ensemble Defense Against Transferable Adversarial Evasion in Intrusion Detection and Prevention Systems},
+@article{hedge2026,
+  title={HEDGE: Defending AI-Powered Intrusion Detection Against Transferable Adversarial Evasion},
   author={Tuyen T. Nguyen, Minh Q. Tran, Hanh P. Du, Hai H. Le, and Hoa N. Nguyen},  
-  year={2025}
+  year={2026}
 }

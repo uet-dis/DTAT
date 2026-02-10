@@ -176,7 +176,7 @@ def main():
             y_pred_idx = wrapper.predict(X_eval)
 
             # Metrics
-            metrics = evaluate_classification(y_test, y_pred_idx, class_names)
+            metrics = evaluate_classification(y_test, y_pred_idx, class_names, metric='weighted')
 
             # Save or debug-log
             out_dir = os.path.join(args.output_dir, model_type)

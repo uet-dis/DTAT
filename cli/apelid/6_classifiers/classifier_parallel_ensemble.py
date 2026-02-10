@@ -199,7 +199,7 @@ def main():
         )
 
         # Calculate metrics
-        metrics = evaluate_classification(y_test, ensemble_pred, class_names)
+        metrics = evaluate_classification(y_test, ensemble_pred, class_names, metric='weighted')
 
         # Save results
         os.makedirs(args.output_dir, exist_ok=True)

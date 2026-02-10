@@ -178,7 +178,7 @@ def save_ensemble_results(ensemble_proba: np.ndarray, ensemble_pred: np.ndarray,
     os.makedirs(output_dir, exist_ok=True)
     
     # Calculate metrics
-    metrics = evaluate_classification(y_test, ensemble_pred, class_names)
+    metrics = evaluate_classification(y_test, ensemble_pred, class_names, metric='weighted')
     
     # Save metrics if requested
     if save_metrics:
@@ -218,7 +218,7 @@ def evaluate_single_model(model, model_type: str, X_test: np.ndarray, y_test: np
     y_pred_idx = model.predict(X_test)
     
     # Calculate metrics
-    metrics = evaluate_classification(y_test, y_pred_idx, class_names)
+    metrics = evaluate_classification(y_test, y_pred_idx, class_names, metric='weighted')
     
     # Save metrics if requested
     if save_metrics:

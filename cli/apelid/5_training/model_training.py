@@ -177,7 +177,7 @@ def main():
 
     model.fit(X_tr, y_tr, X_val, y_val)
     y_pred_idx = model.predict(X_te)
-    metrics = evaluate_classification(y_te, y_pred_idx, classes_sorted)
+    metrics = evaluate_classification(y_te, y_pred_idx, classes_sorted, metric='weighted')
     logger.info(f"[+] Metrics: accuracy={metrics['accuracy']:.4f}, f1={metrics['f1']:.4f}, precision={metrics['precision']:.4f}, recall={metrics['recall']:.4f}")
 
     # Outputs
