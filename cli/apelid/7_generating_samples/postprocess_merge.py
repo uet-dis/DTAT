@@ -31,7 +31,7 @@ REGISTRY = {
     'nslkdd': (NSLKDDResources, NSLKDDPreprocessor),
 }
 
-MODEL_TYPES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_TYPES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,7 +41,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--input', '-i', type=str, default=None, help="Path to merged robust TRAIN CSV (default resolves from resource/model)")
     parser.add_argument('--output', '-o', type=str, default=None, help="Path to save the postprocessed CSV (default resolves from resource/model)")
     parser.add_argument('--label-col', type=str, default=None, help="Label column name (default: auto-detect common names)")
-    parser.add_argument('--sample-threshold', type=int, required=True, help="Target number of samples per attack after balancing")
+    parser.add_argument('--sample-threshold', type=int, required=True, help="Target number of samples per attack after balancing (used for attacks not listed in --attack-targets)")
+    parser.add_argument('--attack-targets', type=str, nargs='*', default=None, metavar='TAG=INT',
+                        help="Per-attack caps, e.g. 'zoo=12000 hsja=12000 default=6000'. 'default' "
+                             "replaces --sample-threshold for every tag not listed; matching is by exact tag name.")
+    parser.add_argument('--assert-exact', action='store_true',
+                        help="Exit non-zero if any attack's final count is below its target (i.e. pool under-supplied)")
+    parser.add_argument('--seed', type=int, default=1337, help="Random seed for sampling within label groups (default: 1337)")
     parser.add_argument('--log-level', type=str, default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
     args = parser.parse_args()
     return args
@@ -218,20 +224,57 @@ def main():
     unique_keys = set(key_counts[key_counts == 1].index.tolist())
     overlap_keys = set(key_counts[key_counts > 1].index.tolist())
 
-    # For deterministic sampling
-    rng_seed = 1337
+    # For deterministic sampling (override via --seed; default 1337 keeps legacy behavior)
+    rng_seed = args.seed
 
     attacks = sorted(exploded['__attack__'].dropna().unique().tolist())
     if not attacks:
         raise SystemExit("No attacks found in __attack__ column")
     num_labels = df[label_col].nunique(dropna=False)
-    logger.info(f"[+] Attacks: {attacks} | Labels: {num_labels} | per-attack target: {args.sample_threshold}")
+    # Parse per-attack targets; 'default' entry overrides --sample-threshold for unlisted tags
+    attack_targets: Dict = {}
+    if args.attack_targets:
+        for item in args.attack_targets:
+            tag, sep, val = item.rpartition('=')
+            if not sep or not tag or not val.lstrip('-').isdigit():
+                raise SystemExit(f"Bad --attack-targets entry: {item!r} (expected TAG=INT, 'default' allowed as TAG)")
+            attack_targets[tag] = int(val)
+
+    def _target_for(tag: str) -> int:
+        if tag in attack_targets:
+            return attack_targets[tag]
+        if 'default' in attack_targets:
+            return attack_targets['default']
+        return args.sample_threshold
+
+    # Parse per-attack targets; 'default' entry overrides --sample-threshold for unlisted tags
+    attack_targets: Dict = {}
+    if args.attack_targets:
+        for item in args.attack_targets:
+            tag, sep, val = item.rpartition('=')
+            if not sep or not tag or not val.lstrip('-').isdigit():
+                raise SystemExit(f"Bad --attack-targets entry: {item!r} (expected TAG=INT, 'default' allowed as TAG)")
+            attack_targets[tag] = int(val)
+
+    def _target_for(tag: str) -> int:
+        if tag in attack_targets:
+            return attack_targets[tag]
+        return attack_targets.get('default', args.sample_threshold)
+
+    if attack_targets:
+        listed = {k: v for k, v in attack_targets.items() if k != 'default'}
+        tgt_desc = (f"default={attack_targets.get('default', args.sample_threshold)}"
+                    + (f" listed={listed}" if listed else ""))
+        logger.info(f"[+] Attacks: {attacks} | Labels: {num_labels} | sampling seed: {args.seed} | per-attack targets: {tgt_desc}")
+    else:
+        logger.info(f"[+] Attacks: {attacks} | Labels: {num_labels} | per-attack target: {args.sample_threshold} | sampling seed: {args.seed}")
 
     selected_rows: List[pd.DataFrame] = []
 
     selected_keys = set()
+    targets_summary: Dict[str, Dict] = {}
     for atk in attacks:
-        need = args.sample_threshold
+        need = _target_for(atk)
         picked_parts: List[pd.DataFrame] = []
 
         # All rows for this attack excluding already selected keys
@@ -240,8 +283,8 @@ def main():
             & (~df['_key_'].isin(selected_keys))
         ].copy()
 
-        # Prepare per-label cap: at most ceil(threshold / num_labels * 2) per label within this attack
-        per_label_cap = int(math.ceil(float(args.sample_threshold) / float(max(1, num_labels)) * 2.0))
+        # Prepare per-label cap: at most ceil(target / num_labels * 2) per label within this attack
+        per_label_cap = int(math.ceil(float(_target_for(atk)) / float(max(1, num_labels)) * 2.0))
         # Track current label counts already picked in this attack
         current_counts: Dict = {}
 
@@ -284,7 +327,8 @@ def main():
         # Reassign attack label to the chosen attack name
         if len(picked) > 0:
             picked.loc[:, '__attack__'] = atk
-        logger.info(f"[+] Attack={atk} final picked: {len(picked)} / target {args.sample_threshold}")
+        logger.info(f"[+] Attack={atk} final picked: {len(picked)} / target {_target_for(atk)}")
+        targets_summary[atk] = {'target': _target_for(atk), 'picked': int(len(picked))}
         selected_rows.append(picked)
 
     # Combine; rows are unique by key by construction
@@ -333,6 +377,14 @@ def main():
             logger.info("[+] Label x Attack counts (postprocess):\n" + tmp.to_string())
     except Exception as e:
         logger.warning(f"[!] Failed to compute label distribution per attack (postprocess): {e}")
+
+    # Optional hard guarantee: every attack reached its target (fail loudly otherwise)
+    if args.assert_exact:
+        shortfall = {t: s for t, s in targets_summary.items() if s['picked'] < s['target']}
+        if shortfall:
+            raise SystemExit(f"ASSERT-EXACT failed (under-supplied attacks): "
+                             + ", ".join(f"{t}: {s['picked']}/{s['target']}" for t, s in shortfall.items()))
+        logger.info(f"[+] assert-exact OK: all {len(targets_summary)} attacks reached target")
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     result.to_csv(args.output, index=False)

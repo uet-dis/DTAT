@@ -1,4 +1,5 @@
 from art_classifier.dnn_classifier import DNNClassifier
+from art_classifier.tabnet_classifier import TabNetClassifier
 from art_classifier.xgb_classifier import XGBWrapper
 from art_classifier.catb_classifier import CatBoostWrapper
 from art_classifier.sklearn_classifier import SkleanWrapper
@@ -19,6 +20,19 @@ def load_model_as_wrapper(model_type: str, model_path: str, *,
     if model_type == 'dnn':
         # DNN loads from .pth with embedded metadata + InputNorm
         wrapper = DNNClassifier.from_checkpoint(
+            ckpt_path=model_path,
+            num_classes=num_classes,
+            device=device,
+            input_dim=input_dim,
+            clip_values=clip_values,
+            params=(wrapper_params or {}),
+        )
+        return wrapper
+
+    if model_type == 'tabnet':
+        # TabNet loads from .pth with embedded metadata + InputNorm (same
+        # contract as dnn); wrapper exposes a logits-only view for ART
+        wrapper = TabNetClassifier.from_checkpoint(
             ckpt_path=model_path,
             num_classes=num_classes,
             device=device,
@@ -65,19 +79,6 @@ def load_model_as_wrapper(model_type: str, model_path: str, *,
         )
         return wrapper
 
-    if model_type == 'histgbm':
-        from training.histgbm import HistGBMModel
-        model_inst = HistGBMModel.load_model(model_path, num_class=num_classes, device=device)
-        wrapper = SkleanWrapper(
-            model=model_inst.model,
-            num_classes=num_classes,
-            input_shape=(input_dim,),
-            device='cpu',
-            clip_values=clip_values,
-            params=(wrapper_params or {}),
-        )
-        return wrapper
-
     if model_type == 'gbm':
         from training.gbm import GBMModel
         model_inst = GBMModel.load_model(model_path, num_class=num_classes, device=device)
@@ -96,7 +97,7 @@ def load_model_as_wrapper(model_type: str, model_path: str, *,
 
 # ---------------- Shared helpers for classifier ensembles ---------------- #
 
-MODEL_TYPES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_TYPES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
 
 def default_inputs(res) -> Tuple[str, str]:
@@ -112,7 +113,7 @@ def find_classifier_model_files(models_dir: str, resource_name: str) -> Dict[str
     if not models_dir_path.exists():
         return model_files
     for mt in MODEL_TYPES:
-        ext = '.pth' if mt == 'dnn' else '.pkl'
+        ext = '.pth' if mt in ('dnn', 'tabnet') else '.pkl'
         p = models_dir_path / f"{resource_name}_{mt}{ext}"
         if p.exists():
             model_files[mt] = str(p)

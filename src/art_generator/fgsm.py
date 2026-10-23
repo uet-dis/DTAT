@@ -25,8 +25,9 @@ class FGSMAttackGenerator(AttackGenerator):
         mask = np.ones(x.shape)
         mask[:, mutate_indices] = 0
         logger.info(f"[+] Generating adversarial samples with FGSM, mutate_indices: {mutate_indices}")
-        # Generate adversarial features
-        x_adv = self.attack.generate(x=x, y=y, mask=mask)
+        # Generate adversarial features (ground truth y for untargeted ascent;
+        # masked second-most-likely targets if the attack is configured targeted)
+        x_adv = self.attack.generate(x=x, y=self.resolve_targets(x, y), mask=mask)
         # y is mandatory: return DataFrame combining X_adv and y
         y_arr = y.reshape(-1) if y.ndim > 1 else y
         feature_names = input_metadata['feature_names']

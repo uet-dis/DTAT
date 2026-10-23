@@ -1,0 +1,17 @@
+{
+    "batch_size": 512,
+    "n_d": 64,
+    "n_a": 32,
+    "n_steps": 6,
+    "gamma": 1.2,
+    "lambda_sparse": 0.0001,
+    "momentum": 0.02,
+    "mask_type": "entmax",
+    "lr": 0.01,
+    "embedding_dim": 50,
+    "weight_decay": 0.0001,
+    "epochs": 40,
+    "patience": 10,
+    "random_state": 42,
+    "virtual_batch_size": 128
+}

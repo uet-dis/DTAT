@@ -35,16 +35,17 @@ REGISTRY = {
     'nslkdd': (NSLKDDResources, NSLKDDPreprocessor),
 }
 
-MODEL_TYPES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_TYPES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
-# Default ensemble weights
+# Default ensemble weights (align with ensemble_helper.py; self-normalizing).
+# tabnet=0.1 renormalized scheme (HPO-tuned member, offline ensemble test 2026-10).
 ENSEMBLE_WEIGHTS = {
-    'xgb': 0.3,
-    'dnn': 0.1,
-    'catb': 0.2,
-    'bagging': 0.2,
-    'histgbm': 0.2,
-    'gbm': 0.2,
+    'xgb': 0.27,
+    'dnn': 0.09,
+    'catb': 0.18,
+    'bagging': 0.18,
+    'gbm': 0.18,
+    'tabnet': 0.1,
 }
 
 
@@ -105,8 +106,6 @@ def main():
     parser.add_argument('--models-dir', type=str, default=None, help="Directory containing trained models")
     parser.add_argument('--output-dir', type=str, default=None, help="Output directory for results")
     parser.add_argument('--exclude-models', type=str, nargs='*', default=[], help="Models to exclude from ensemble")
-    parser.add_argument('--using-histgbm', action='store_true',
-                        help="Use HistGradientBoosting (histgbm) instead of GBM (default uses gbm)")
     parser.add_argument('--max-workers', type=int, default=4, help="Maximum parallel workers")
     parser.add_argument('--batch-size', type=int, default=-1, help="Batch size for prediction (-1 for full dataset)")
     parser.add_argument('--save-cm', action='store_true', help="Save confusion matrix")
@@ -164,19 +163,8 @@ def main():
         if ex in model_files:
             del model_files[ex]
             logger.info(f"[+] Excluded model: {ex}")
-    # Prefer one GBM family based on flag (default: gbm)
-    if args.using_histgbm:
-        if 'gbm' in model_files:
-            del model_files['gbm']
-            logger.info("[+] using_histgbm is ON: disabled 'gbm', keeping 'histgbm' if present")
-        if 'histgbm' not in model_files:
-            logger.warning("[!] using_histgbm is ON but 'histgbm' model not found")
-    else:
-        if 'histgbm' in model_files:
-            del model_files['histgbm']
-            logger.info("[+] using_histgbm is OFF: disabled 'histgbm', using 'gbm' if present")
-        if 'gbm' not in model_files:
-            logger.warning("[!] using_histgbm is OFF but 'gbm' model not found")
+    if 'gbm' not in model_files:
+        logger.warning("[!] 'gbm' model not found")
     if not model_files:
         raise SystemExit("No models to ensemble after exclusions")
     logger.info(f"[+] Parallel ensemble with {len(model_files)} models: {list(model_files.keys())}")

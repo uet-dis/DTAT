@@ -31,16 +31,21 @@ REGISTRY = {
     'nslkdd': (NSLKDDResources, NSLKDDPreprocessor),
 }
 
-MODEL_TYPES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_TYPES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Report label x attack distribution for postprocessed robust train files")
+    parser = argparse.ArgumentParser(
+        description="Report label x attack distribution for postprocessed robust train files "
+                    "(or explicit CSV paths via --input)")
     parser.add_argument('--resource', '-r', type=str, required=True, choices=list(REGISTRY.keys()))
     parser.add_argument('--model', '-m', type=str, required=True, nargs='+', choices=MODEL_TYPES,
                         help="One or more model types to include")
     parser.add_argument('--attack', '-a', type=str, nargs='*', default=None,
                         help="Optional list of attacks to include (default: all)")
+    parser.add_argument('--input', '-i', type=str, nargs='+', default=None,
+                        help="Explicit CSV path(s) to analyse; overrides the default robust-post "
+                             "resolution (then --model is only used for log labels of defaults)")
     parser.add_argument('--label-col', type=str, default=None, help="Label column name (default: auto-detect)")
     parser.add_argument('--log-level', type=str, default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
     return parser.parse_args()
@@ -127,8 +132,16 @@ def main():
 
     robust_dir = os.path.join(res.DATA_FOLDER, 'adv_samples', 'robust')
 
-    for model in args.model:
-        input_path = os.path.join(robust_dir, f"{res.resources_name}_{model}_robust_train_post.csv")
+    if args.input:
+        # Explicit paths win; use the CSV basename as the table label
+        jobs = [(os.path.splitext(os.path.basename(p))[0], p) for p in args.input]
+    else:
+        jobs = [
+            (model, os.path.join(robust_dir, f"{res.resources_name}_{model}_robust_train_post.csv"))
+            for model in args.model
+        ]
+
+    for model, input_path in jobs:
         if not os.path.exists(input_path):
             logger.warning(f"[!] Missing robust post file for model={model}: {input_path}")
             continue
@@ -142,10 +155,15 @@ def main():
         # Normalize attacks; after postprocess it should be single-valued, but support multi anyway
         exploded = normalize_attacks_column(df[[label_col, '__attack__']].copy())
 
-        # Optional attack filter
+        # Optional attack filter: exact tag ('zoo') or transfer tag ('{res}_dnn_fgsm_adv',
+        # '{res}_tabnet_pgd_adv') — suffix _{attack}_adv marks rows generated from a source model
         if args.attack:
-            wanted = set(args.attack)
-            exploded = exploded[exploded['__attack__'].astype(str).isin(wanted)]
+            def _atk_matches(tag: str) -> bool:
+                for a in args.attack:
+                    if tag == a or tag.endswith(f"_{a}_adv"):
+                        return True
+                return False
+            exploded = exploded[exploded['__attack__'].astype(str).map(_atk_matches)]
             if exploded.empty:
                 logger.warning(f"[!] No rows left after attack filter for model={model}; skipping")
                 continue

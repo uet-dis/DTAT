@@ -45,8 +45,8 @@ def _find_model_files(models_dir: str, resource_name: str) -> Dict[str, str]:
         logger.warning(f"Models directory not found: {models_dir}")
         return model_files
 
-    for model_type in ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']:
-        ext = '.pth' if model_type == 'dnn' else '.pkl'
+    for model_type in ['xgb', 'dnn', 'catb', 'bagging', 'gbm']:
+        ext = '.pth' if model_type in ('dnn', 'tabnet') else '.pkl'
         pattern = f"{resource_name}_{model_type}{ext}"
         model_path = models_dir_path / pattern
         if model_path.exists():
@@ -71,8 +71,6 @@ def main():
     parser.add_argument('--output-dir', type=str, default=None, help="Output directory for results")
     parser.add_argument('--save-cm', action='store_true', help="Save confusion matrix for each model")
     parser.add_argument('--save-mt', action='store_true', help="Save metrics for each model")
-    parser.add_argument('--using-histgbm', action='store_true',
-                        help="Use HistGradientBoosting (histgbm) instead of GBM (default uses gbm)")
     parser.add_argument('--device', type=str, default='auto', choices=['cpu', 'cuda', 'auto'])
     parser.add_argument('--log-level', type=str, default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
     args = parser.parse_args()
@@ -120,7 +118,7 @@ def main():
             raise SystemExit("Must specify --models when mode=model")
         model_files = {}
         for model_type in args.models:
-            ext = '.pth' if model_type == 'dnn' else '.pkl'
+            ext = '.pth' if model_type in ('dnn', 'tabnet') else '.pkl'
             p = os.path.join(args.models_dir, f"{res.resources_name}_{model_type}{ext}")
             if os.path.exists(p):
                 model_files[model_type] = p
@@ -132,19 +130,8 @@ def main():
         if ex in model_files:
             del model_files[ex]
             logger.info(f"[+] Excluded model: {ex}")
-    # Prefer one GBM family based on flag (default: gbm)
-    if args.using_histgbm:
-        if 'gbm' in model_files:
-            del model_files['gbm']
-            logger.info("[+] using_histgbm is ON: disabled 'gbm', keeping 'histgbm' if present")
-        if 'histgbm' not in model_files:
-            logger.warning("[!] using_histgbm is ON but 'histgbm' model not found")
-    else:
-        if 'histgbm' in model_files:
-            del model_files['histgbm']
-            logger.info("[+] using_histgbm is OFF: disabled 'histgbm', using 'gbm' if present")
-        if 'gbm' not in model_files:
-            logger.warning("[!] using_histgbm is OFF but 'gbm' model not found")
+    if 'gbm' not in model_files:
+        logger.warning("[!] 'gbm' model not found")
     if not model_files:
         raise SystemExit("No models to evaluate after exclusions")
 

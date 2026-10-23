@@ -8,6 +8,10 @@ catboost_info/
 build/
 data/
 resources/
-
+.env
+temp/
 
 reports/
+CLAUDE.md
+AGENTS.md
+opencode.json

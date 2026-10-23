@@ -12,7 +12,7 @@ class PGDAttackGenerator(AttackGenerator):
             "eps": 0.2,
             "eps_step": 0.01,
             "batch_size": 64,
-            "targeted": True,
+            "targeted": False,  # untargeted evasion: ascent on true-label loss (was True — bug: minimized loss toward the true label)
             "max_iter": 200,
             "verbose": True
         }
@@ -23,11 +23,12 @@ class PGDAttackGenerator(AttackGenerator):
         )
 
     def generate(self, x: np.ndarray, y: np.ndarray, input_metadata: dict, mutate_indices: list[int] = [], **kwargs):
-        # Generate adversarial features
+        # Generate adversarial features (ground truth y for untargeted ascent;
+        # masked second-most-likely targets if the attack is configured targeted)
         mask = np.ones(x.shape)
         mask[:, mutate_indices] = 0
         logger.info(f"[+] Generating adversarial samples with PGD, mutate_indices: {mutate_indices}")
-        x_adv = self.attack.generate(x=x, y=y, mask=mask)
+        x_adv = self.attack.generate(x=x, y=self.resolve_targets(x, y), mask=mask)
         # y is mandatory: return DataFrame combining X_adv and y
         y_arr = y.reshape(-1) if y.ndim > 1 else y
         feature_names = input_metadata['feature_names']

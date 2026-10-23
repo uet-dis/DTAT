@@ -11,9 +11,9 @@ from utils.logging import get_logger
 
 from training.xgb import XGBModel
 from training.dnn import DNNModel
+from training.tabnet import TabNetModel
 from training.catb import CatBoostModel
 from training.bagging import BaggingModel
-from training.histgbm import HistGBMModel
 from training.gbm import GBMModel
 from training.model import evaluate_classification, confusion_matrix_from_indices, save_confusion_matrix_png
 
@@ -24,20 +24,21 @@ logger = get_logger(__name__)
 MODEL_CLASSES = {
     'xgb': XGBModel,
     'dnn': DNNModel,
+    'tabnet': TabNetModel,
     'catb': CatBoostModel,
     'bagging': BaggingModel,
-    'histgbm': HistGBMModel,
     'gbm': GBMModel,
 }
 
-# Ensemble weights
+# Ensemble weights (self-normalizing in combine_predictions — relative values).
+# tabnet=0.1 renormalized scheme (HPO-tuned member, offline ensemble test 2026-10).
 ENSEMBLE_WEIGHTS = {
-    'xgb': 0.3,
-    'dnn': 0.1,
-    'catb': 0.2,
-    'bagging': 0.2,
-    'histgbm': 0.2,
-    'gbm': 0.2,
+    'xgb': 0.27,
+    'dnn': 0.09,
+    'catb': 0.18,
+    'bagging': 0.18,
+    'gbm': 0.18,
+    'tabnet': 0.1,
 }
 
 
@@ -45,14 +46,14 @@ def load_model(model_path: str, model_type: str, num_class: int = None, device: 
     """Load a trained model from file using the model's own load_model method."""
     if model_type == 'dnn':
         return DNNModel.load_model(model_path, device=device)
+    elif model_type == 'tabnet':
+        return TabNetModel.load_model(model_path, device=device)
     elif model_type == 'xgb':
         return XGBModel.load_model(model_path, num_class=num_class, device=device)
     elif model_type == 'catb':
         return CatBoostModel.load_model(model_path, num_class=num_class, device=device)
     elif model_type == 'bagging':
         return BaggingModel.load_model(model_path, num_class=num_class, device=device)
-    elif model_type == 'histgbm':
-        return HistGBMModel.load_model(model_path, num_class=num_class, device=device)
     elif model_type == 'gbm':
         return GBMModel.load_model(model_path, num_class=num_class, device=device)
     else:
@@ -70,7 +71,7 @@ def find_model_files(models_dir: str, resource_name: str) -> dict:
     
     for model_type in MODEL_CLASSES.keys():
         # Look for .pth (DNN) or .pkl (tree models)
-        ext = '.pth' if model_type == 'dnn' else '.pkl'
+        ext = '.pth' if model_type in ('dnn', 'tabnet') else '.pkl'
         pattern = f"{resource_name}_{model_type}{ext}"
         model_path = models_dir / pattern
         

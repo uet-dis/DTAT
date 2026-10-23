@@ -16,9 +16,9 @@ from preprocessing.prepare import PrepareData
 
 from training.xgb import XGBModel
 from training.dnn import DNNModel
+from training.tabnet import TabNetModel
 from training.catb import CatBoostModel
 from training.bagging import BaggingModel
-from training.histgbm import HistGBMModel
 from training.gbm import GBMModel
 from training.model import evaluate_classification, confusion_matrix_from_indices, save_confusion_matrix_png
 
@@ -46,8 +46,8 @@ def _load_params(model_name: str, params_dir: str) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Unified training entrypoint (xgb | dnn | catb | bagging | histgbm | gbm)")
-    parser.add_argument('--model', '-m', type=str, required=True, choices=['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm'])
+    parser = argparse.ArgumentParser(description="Unified training entrypoint (xgb | dnn | tabnet | catb | bagging | gbm)")
+    parser.add_argument('--model', '-m', type=str, required=True, choices=['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm'])
     parser.add_argument('--resource', '-r', type=str, required=True, choices=list(REGISTRY.keys()))
     parser.add_argument('--params-dir', type=str, default='params/training')
     parser.add_argument('--train-in', type=str, default=None)
@@ -139,10 +139,48 @@ def main():
         model = CatBoostModel(num_class=len(classes_sorted), params=cb_params, random_state=42)
     elif args.model == 'bagging':
         model = BaggingModel(params=params.get('params', {}), random_state=42)
-    elif args.model == 'histgbm':
-        model = HistGBMModel(num_class=len(classes_sorted), params=params.get('params', {}), random_state=42)
     elif args.model == 'gbm':
         model = GBMModel(num_class=len(classes_sorted), params=params.get('params', {}), random_state=42)
+    elif args.model == 'tabnet':
+        # Same embedding/InputNorm wiring as the DNN branch
+        cat_cardinalities = pre.extract_categorical_cardinalities()
+        cat_feature_indices = meta_tr['cat_feature_indices']
+        cont_feature_indices = meta_tr['cont_feature_indices']
+        binary_feature_indices = meta_tr.get('binary_feature_indices', [])
+        cont_means = meta_tr.get('cont_means')
+        cont_stds = meta_tr.get('cont_stds')
+        inputnorm_eps = float(meta_tr.get('inputnorm_eps', 1e-6))
+
+        model = TabNetModel(
+            input_dim=X_tr.shape[1],
+            num_class=len(classes_sorted),
+            lr=float(params.get('lr', 5e-3)),
+            weight_decay=float(params.get('weight_decay', 1e-4)),
+            batch_size=int(params.get('batch_size', 1024)),
+            max_epochs=int(params.get('epochs', 40)),
+            patience=int(params.get('patience', 10)),
+            device=None if args.device == 'auto' else args.device,
+            random_state=int(params.get('random_state', 42)),
+            # embedding + inputnorm (same branch layout as DNNModel)
+            cat_cardinalities=cat_cardinalities,
+            cat_feature_indices=cat_feature_indices,
+            binary_feature_indices=binary_feature_indices,
+            cont_feature_indices=cont_feature_indices,
+            embedding_dim=int(params.get('embedding_dim', 50)),
+            # TabNet architecture
+            n_d=int(params.get('n_d', 64)),
+            n_a=int(params.get('n_a', 32)),
+            n_steps=int(params.get('n_steps', 6)),
+            gamma=float(params.get('gamma', 1.2)),
+            virtual_batch_size=int(params.get('virtual_batch_size', 128)),
+            momentum=float(params.get('momentum', 0.02)),
+            mask_type=str(params.get('mask_type', 'entmax')),
+            lambda_sparse=float(params.get('lambda_sparse', 1e-4)),
+            cont_means=cont_means,
+            cont_stds=cont_stds,
+            inputnorm_eps=inputnorm_eps,
+        )
+
     else:  # args.model == 'dnn'
         # Build embedding DNN configuration
         cat_cardinalities = pre.extract_categorical_cardinalities()
@@ -182,8 +220,8 @@ def main():
 
     # Outputs
     model_tag = args.model
-    # File extension policy: DNN -> .pth, tree models -> .pkl
-    default_ext = '.pth' if model_tag == 'dnn' else '.pkl'
+    # File extension policy: torch models (dnn/tabnet) -> .pth, tree models -> .pkl
+    default_ext = '.pth' if model_tag in ('dnn', 'tabnet') else '.pkl'
     default_stem = f"{res.resources_name}_{model_tag}{'_robust' if args.adv_train else ''}"
     model_out = args.model_out or os.path.join(res.DATA_FOLDER, 'models', f"{default_stem}{default_ext}")
     report_folder = f"{res.REPORT_FOLDER}/{model_tag}"

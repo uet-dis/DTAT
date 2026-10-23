@@ -3,6 +3,18 @@ from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 
+from utils.logging import get_logger
+
+# Feature Squeezing lives in a local-only module (gitignored); optional at import time.
+try:
+    from .feature_squeezing import build_feature_squeezing_defences
+except ModuleNotFoundError as exc:
+    if exc.name != f"{__package__}.feature_squeezing":
+        raise
+    build_feature_squeezing_defences = None
+
+logger = get_logger(__name__)
+
 
 
 class AdversarialWrapper(abc.ABC):
@@ -39,37 +51,12 @@ class AdversarialWrapper(abc.ABC):
             self._estimator = self.build_estimator()
         return self._estimator
 
-    # Optional preprocessing defences (Feature Squeezing)
+    # Optional preprocessing defences: provided by feature_squeezing.py when that
+    # local module exists; otherwise no defences are built.
     def _build_preprocessing_defences(self) -> Optional[list]:
-        """Create preprocessing defences list based on params.
-
-        Supported params:
-          - feature_squeezing: bool (enable/disable)
-          - fs_bit_depth: int (default 8)
-          - fs_apply_fit: bool (default True)
-          - fs_apply_predict: bool (default True)
-        """
-        try:
-            enabled = bool(self.params.get("feature_squeezing", False) or ("fs_bit_depth" in self.params))
-            if not enabled:
-                return None
-            try:
-                from art.defences.preprocessor import FeatureSqueezing  # type: ignore
-            except Exception:
-                # ART not available or defence not present; skip silently
-                return None
-            bit_depth = int(self.params.get("fs_bit_depth", self.params.get("feature_squeezing_bit_depth", 8)))
-            apply_fit = bool(self.params.get("fs_apply_fit", True))
-            apply_predict = bool(self.params.get("fs_apply_predict", True))
-            fs = FeatureSqueezing(
-                clip_values=(0, 1),
-                bit_depth=bit_depth,
-                apply_fit=apply_fit,
-                apply_predict=apply_predict,
-            )
-            return [fs]
-        except Exception:
+        if build_feature_squeezing_defences is None:
             return None
+        return build_feature_squeezing_defences(self.params)
 
     # Basic API
     def predict_proba(self, X: np.ndarray) -> np.ndarray:

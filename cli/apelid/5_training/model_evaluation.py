@@ -28,7 +28,7 @@ REGISTRY = {
     'nslkdd': (NSLKDDResources, NSLKDDPreprocessor),
 }
 
-MODEL_CLASSES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_CLASSES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
 def _default_inputs(res) -> tuple[str, str]:
     """Get default train and test data paths."""
@@ -102,7 +102,7 @@ def main():
         for model_type in args.models:
             if model_type not in MODEL_CLASSES:
                 raise SystemExit(f"Unknown model type: {model_type}")
-            ext = '.pth' if model_type == 'dnn' else '.pkl'
+            ext = '.pth' if model_type in ('dnn', 'tabnet') else '.pkl'
             model_path = os.path.join(args.models_dir, f"{res.resources_name}_{model_type}{ext}")
             if os.path.exists(model_path):
                 model_files[model_type] = model_path

@@ -30,7 +30,7 @@ REGISTRY = {
     'nslkdd': (NSLKDDResources, NSLKDDPreprocessor),
 }
 
-MODEL_TYPES = ['xgb', 'dnn', 'catb', 'bagging', 'histgbm', 'gbm']
+MODEL_TYPES = ['xgb', 'dnn', 'tabnet', 'catb', 'bagging', 'gbm']
 
 
 def _default_inputs(res) -> tuple[str, str]:

@@ -76,8 +76,6 @@ def main():
     parser.add_argument('--output-dir', type=str, default=None, help="Output directory for results")
     parser.add_argument('--exclude-models', type=str, nargs='*', default=[], 
                        help="Models to exclude from ensemble")
-    parser.add_argument('--using-histgbm', action='store_true',
-                       help="Use HistGradientBoosting (histgbm) instead of GBM (default uses gbm)")
     parser.add_argument('--batch-size', type=int, default=-1, help="Batch size for prediction (-1 for full dataset)")
     parser.add_argument('--save-cm', action='store_true', help="Save confusion matrix")
     parser.add_argument('--save-mt', action='store_true', help="Save metrics")
@@ -130,19 +128,8 @@ def main():
             del model_files[exclude_model]
             logger.info(f"[+] Excluded model: {exclude_model}")
     
-    # Prefer one GBM family based on flag (default: gbm)
-    if args.using_histgbm:
-        if 'gbm' in model_files:
-            del model_files['gbm']
-            logger.info("[+] using_histgbm is ON: disabled 'gbm', keeping 'histgbm' if present")
-        if 'histgbm' not in model_files:
-            logger.warning("[!] using_histgbm is ON but 'histgbm' model not found")
-    else:
-        if 'histgbm' in model_files:
-            del model_files['histgbm']
-            logger.info("[+] using_histgbm is OFF: disabled 'histgbm', using 'gbm' if present")
-        if 'gbm' not in model_files:
-            logger.warning("[!] using_histgbm is OFF but 'gbm' model not found")
+    if 'gbm' not in model_files:
+        logger.warning("[!] 'gbm' model not found")
 
     if not model_files:
         raise SystemExit("No models to ensemble after exclusions")
