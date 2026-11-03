@@ -1,0 +1,13 @@
+dataset,source,n,viol_before_pct,viol_after_pct
+cic2018,major:Benign,14000,6.89,0.0
+cic2018,major:Bot,14000,0.01,0.0
+cic2018,major:DDOS attack-HOIC,14000,0.0,0.0
+cic2018,major:DDoS attacks-LOIC-HTTP,14000,0.0,0.0
+cic2018,major:DoS attacks-GoldenEye,14000,0.01,0.0
+cic2018,major:DoS attacks-Hulk,14000,0.0,0.0
+cic2018,major:Infilteration,14000,9.78,0.0
+cic2018,major:SSH-Bruteforce,14000,0.0,0.0
+cic2018,minor:Brute Force -Web:wgan,14000,97.97,0.0
+cic2018,minor:Brute Force -XSS:wgan,14000,98.89,0.0
+cic2018,minor:DoS attacks-Slowloris:wgan,14000,63.76,0.0
+cic2018,minor:SQL Injection:wgan,14000,99.59,0.0

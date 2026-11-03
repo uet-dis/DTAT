@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+cic2018,validate,base,,omega1,0.2,xgb,tabnet-deepfool-original,49056,63.02,0.68
+cic2018,validate,base,,omega1,0.2,catb,tabnet-deepfool-original,49033,57.87,0.68
+cic2018,validate,base,,omega1,0.2,gbm,tabnet-deepfool-original,49039,64.65,0.68
+cic2018,validate,base,,omega1,0.2,bagging,tabnet-deepfool-original,49036,51.85,0.68
+cic2018,validate,base,,omega1,0.2,dnn,tabnet-deepfool-original,47747,4.13,0.68
+cic2018,validate,base,,omega1,0.2,tabnet,tabnet-deepfool-original,47819,71.17,0.68

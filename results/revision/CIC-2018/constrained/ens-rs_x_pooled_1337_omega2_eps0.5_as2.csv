@@ -1,0 +1,2 @@
+dataset,experiment,variant,seed,level,eps,attack_seed,sample_seed,target,source,n_clean_correct,asr,iters,n_sample,queries,viol_pct,cap_viol_pct,minutes
+cic2018,ens-rs,pooled,1337,omega2,0.5,2,2,ensemble,ensemble,4513,63.84,300,4715,519108,0.0,0.0,3.06

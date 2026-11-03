@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+nslkdd,validate,base,,omega1,0.2,xgb,dnn-deepfool-original,17250,84.76,0.15
+nslkdd,validate,base,,omega1,0.2,catb,dnn-deepfool-original,17228,84.36,0.15
+nslkdd,validate,base,,omega1,0.2,gbm,dnn-deepfool-original,17211,88.33,0.15
+nslkdd,validate,base,,omega1,0.2,bagging,dnn-deepfool-original,17213,70.34,0.15
+nslkdd,validate,base,,omega1,0.2,dnn,dnn-deepfool-original,17088,100.0,0.15
+nslkdd,validate,base,,omega1,0.2,tabnet,dnn-deepfool-original,17073,22.17,0.15

@@ -1,0 +1,2 @@
+dataset,experiment,variant,seed,level,eps,attack_seed,sample_seed,target,source,n_clean_correct,asr,iters,n_sample,queries,viol_pct,cap_viol_pct,minutes
+nslkdd,ens-sq,tabonly,1339,omega1,0.5,1,1,ensemble,ensemble,2005,71.42,1000,2033,648719,0.0,,3.54

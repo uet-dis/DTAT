@@ -1,0 +1,8 @@
+dataset,experiment,variant,seed,level,eps,attack_seed,sample_seed,target,source,n_clean_correct,asr,iters,n_sample,queries,viol_pct,cap_viol_pct,minutes
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,xgb,variant-dnn,2006,0.7,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,catb,variant-dnn,1999,0.65,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,gbm,variant-dnn,1999,0.55,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,bagging,variant-dnn,1995,0.85,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,dnn,variant-dnn,1989,0.5,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,tabnet,variant-dnn,1975,0.0,100,2033,38627,0.0,0.0,1.29
+nslkdd,cpgd,dtat_o2,1338,omega2,0.5,1,1,ensemble-per-branch,variant-dnn,2004,0.5,100,2033,38627,0.0,0.0,1.29

@@ -1,0 +1,39 @@
+\begin{tabular}{@{}lllrrrrrrr@{}}
+\toprule
+Dataset & $\Omega$ & Measurement & Base & IAT & Pooled & \DTAT & \DTAT-$\Omega_1$ & \DTAT-$\Omega_2$ & \DTAT-$\Omega_1^{\prime}$\\
+\midrule
+NSL-KDD & $\Omega_1$ & cPGD$\to$trees (D) & 70.85$\pm$0.30 & 53.25$\pm$1.18 & 14.71$\pm$2.27 & 20.82$\pm$1.25 & \textbf{12.62$\pm$0.67} & 62.52$\pm$1.30 & 12.88$\pm$0.66\\
+NSL-KDD & $\Omega_1$ & cPGD$\to$trees (T) & 67.95$\pm$0.63 & 45.12$\pm$2.03 & \textbf{13.77$\pm$0.76} & 23.31$\pm$0.90 & 18.33$\pm$0.88 & 60.50$\pm$1.66 & 17.34$\pm$1.68\\
+NSL-KDD & $\Omega_1$ & cPGD per-branch ens. & 47.82$\pm$1.85 & 13.14$\pm$0.33 & 8.55$\pm$0.43 & 10.14$\pm$0.86 & \textbf{7.74$\pm$0.79} & 32.88$\pm$2.19 & 8.04$\pm$1.13\\
+NSL-KDD & $\Omega_1$ & Adaptive cPGD ens. & -- & 38.95$\pm$2.95 & \textbf{32.64$\pm$2.77} & 37.40$\pm$2.71 & 41.72$\pm$2.20 & 48.18$\pm$6.36 & 37.97$\pm$2.60\\
+NSL-KDD & $\Omega_1$ & Adaptive ensemble RS & 60.25$\pm$1.38 & 45.02$\pm$1.72 & \textbf{41.72$\pm$0.88} & 44.19$\pm$1.88 & 46.83$\pm$1.20 & 65.23$\pm$3.24 & 46.31$\pm$2.02\\
+NSL-KDD & $\Omega_1$ & Adaptive tree RS & 100.00$\pm$0.00 & 92.93$\pm$1.14 & \textbf{79.99$\pm$3.14} & 85.79$\pm$2.65 & 84.16$\pm$2.03 & 99.99$\pm$0.01 & 81.47$\pm$2.20\\
+NSL-KDD & $\Omega_1$ & Adaptive ensemble Square & 87.59$\pm$0.47 & 75.02$\pm$2.88 & 63.59$\pm$1.94 & 69.66$\pm$2.03 & 59.07$\pm$3.63 & 86.31$\pm$3.10 & \textbf{56.16$\pm$3.02}\\
+NSL-KDD & $\Omega_1$ & Adaptive tree Square & 98.95 & 90.76$\pm$1.09 & \textbf{73.36$\pm$2.47} & 78.68$\pm$3.61 & 76.40$\pm$3.64 & 99.27$\pm$0.14 & 73.54$\pm$2.48\\
+NSL-KDD & $\Omega_2$ & cPGD$\to$trees (D) & 10.16$\pm$0.39 & 3.45$\pm$0.46 & 1.78$\pm$0.18 & 1.70$\pm$0.19 & 1.40$\pm$0.38 & \textbf{0.44$\pm$0.06} & 3.35$\pm$1.35\\
+NSL-KDD & $\Omega_2$ & cPGD$\to$trees (T) & 16.45$\pm$0.29 & 4.51$\pm$0.92 & 3.29$\pm$0.44 & 2.58$\pm$0.46 & 2.00$\pm$0.50 & \textbf{1.20$\pm$0.31} & 4.71$\pm$1.82\\
+NSL-KDD & $\Omega_2$ & cPGD per-branch ens. & 1.52$\pm$0.25 & 1.44$\pm$0.17 & 1.12$\pm$0.15 & 1.23$\pm$0.16 & 0.95$\pm$0.14 & \textbf{0.34$\pm$0.06} & 1.10$\pm$0.17\\
+NSL-KDD & $\Omega_2$ & Adaptive cPGD ens. & -- & 2.19$\pm$0.32 & 1.61$\pm$0.23 & 2.09$\pm$0.29 & 1.78$\pm$0.20 & \textbf{0.63$\pm$0.12} & 1.73$\pm$0.26\\
+NSL-KDD & $\Omega_2$ & Adaptive ensemble RS & 3.05$\pm$0.65 & 3.32$\pm$0.20 & 2.87$\pm$0.25 & 3.22$\pm$0.23 & 2.53$\pm$0.25 & \textbf{1.16$\pm$0.11} & 2.52$\pm$0.31\\
+NSL-KDD & $\Omega_2$ & Adaptive tree RS & 37.54$\pm$0.58 & 11.47$\pm$1.32 & 9.34$\pm$0.92 & 9.39$\pm$0.96 & 4.80$\pm$0.34 & \textbf{3.00$\pm$0.30} & 8.07$\pm$2.09\\
+NSL-KDD & $\Omega_2$ & Adaptive ensemble Square & 3.25$\pm$0.65 & 3.22$\pm$0.21 & 2.79$\pm$0.26 & 3.12$\pm$0.26 & 2.50$\pm$0.25 & \textbf{1.20$\pm$0.10} & 2.43$\pm$0.29\\
+NSL-KDD & $\Omega_2$ & Adaptive tree Square & 39.73 & 13.77$\pm$2.63 & 10.20$\pm$0.90 & 10.17$\pm$1.28 & 4.74$\pm$0.38 & \textbf{3.01$\pm$0.30} & 7.81$\pm$2.28\\
+\midrule
+CSE-CIC-IDS2018 & $\Omega_1$ & cPGD$\to$trees (D) & 66.07$\pm$0.29 & 61.93$\pm$0.59 & 43.37$\pm$2.49 & 47.31$\pm$3.36 & 15.01$\pm$0.95 & 49.49$\pm$1.66 & \textbf{14.26$\pm$1.07}\\
+CSE-CIC-IDS2018 & $\Omega_1$ & cPGD$\to$trees (T) & 55.42$\pm$0.19 & 53.72$\pm$1.88 & 33.68$\pm$1.63 & 40.96$\pm$2.78 & 12.05$\pm$1.12 & 39.38$\pm$1.22 & \textbf{11.10$\pm$1.61}\\
+CSE-CIC-IDS2018 & $\Omega_1$ & cPGD per-branch ens. & 62.41$\pm$0.51 & 55.36$\pm$3.49 & 45.87$\pm$3.49 & 51.80$\pm$4.61 & 8.63$\pm$3.25 & 54.43$\pm$3.55 & \textbf{6.61$\pm$1.74}\\
+CSE-CIC-IDS2018 & $\Omega_1$ & Adaptive cPGD ens. & -- & 79.33$\pm$7.94 & 80.25$\pm$5.88 & 80.90$\pm$8.50 & \textbf{53.35$\pm$6.08} & 69.95$\pm$1.77 & 57.46$\pm$6.33\\
+CSE-CIC-IDS2018 & $\Omega_1$ & Adaptive ensemble RS & 99.57$\pm$0.01 & 98.81$\pm$0.55 & 99.06$\pm$0.56 & 99.14$\pm$0.36 & \textbf{67.89$\pm$4.18} & 99.28$\pm$0.45 & 68.99$\pm$3.33\\
+CSE-CIC-IDS2018 & $\Omega_1$ & Adaptive tree RS & 99.87$\pm$0.01 & 99.51$\pm$0.43 & 97.80$\pm$1.06 & 97.21$\pm$1.21 & \textbf{72.77$\pm$2.22} & 94.14$\pm$1.23 & 73.39$\pm$2.12\\
+CSE-CIC-IDS2018 & $\Omega_1$ & Adaptive ensemble Square & 99.22$\pm$0.04 & 98.57$\pm$0.19 & 99.11$\pm$0.36 & 99.10$\pm$0.33 & 72.92$\pm$4.59 & 92.84$\pm$5.13 & \textbf{71.14$\pm$2.97}\\
+CSE-CIC-IDS2018 & $\Omega_1$ & Adaptive tree Square & 96.96 & 94.27$\pm$0.62 & 91.83$\pm$0.99 & 91.49$\pm$1.34 & \textbf{69.25$\pm$2.57} & 89.31$\pm$1.94 & 70.22$\pm$1.60\\
+CSE-CIC-IDS2018 & $\Omega_2$ & cPGD$\to$trees (D) & 38.76$\pm$0.23 & 34.99$\pm$2.58 & 24.88$\pm$1.24 & 27.30$\pm$1.40 & 12.60$\pm$0.60 & \textbf{6.40$\pm$0.46} & 12.70$\pm$0.36\\
+CSE-CIC-IDS2018 & $\Omega_2$ & cPGD$\to$trees (T) & 31.34$\pm$0.27 & 21.97$\pm$0.76 & 19.15$\pm$1.85 & 22.85$\pm$0.79 & 8.31$\pm$1.32 & \textbf{7.62$\pm$1.16} & 8.15$\pm$0.94\\
+CSE-CIC-IDS2018 & $\Omega_2$ & cPGD per-branch ens. & 36.35$\pm$0.62 & 16.52$\pm$0.62 & 22.09$\pm$5.42 & 14.98$\pm$0.59 & 11.44$\pm$0.53 & \textbf{1.27$\pm$0.15} & 11.29$\pm$0.32\\
+CSE-CIC-IDS2018 & $\Omega_2$ & Adaptive cPGD ens. & -- & 29.23$\pm$6.64 & 28.81$\pm$3.04 & 29.63$\pm$6.65 & \textbf{20.48$\pm$1.37} & 22.12$\pm$3.70 & 24.39$\pm$3.40\\
+CSE-CIC-IDS2018 & $\Omega_2$ & Adaptive ensemble RS & 64.82$\pm$0.72 & 63.28$\pm$3.42 & 63.29$\pm$2.27 & 63.07$\pm$2.98 & 23.46$\pm$2.31 & 24.66$\pm$1.64 & \textbf{23.37$\pm$3.41}\\
+CSE-CIC-IDS2018 & $\Omega_2$ & Adaptive tree RS & 62.97$\pm$0.04 & 55.87$\pm$1.61 & 47.51$\pm$0.93 & 52.22$\pm$2.02 & 28.64$\pm$1.10 & \textbf{23.91$\pm$1.64} & 28.64$\pm$1.55\\
+CSE-CIC-IDS2018 & $\Omega_2$ & Adaptive ensemble Square & 80.23$\pm$0.81 & 74.85$\pm$6.13 & 73.70$\pm$4.80 & 72.60$\pm$6.03 & 29.05$\pm$2.90 & 30.58$\pm$2.15 & \textbf{28.39$\pm$2.62}\\
+CSE-CIC-IDS2018 & $\Omega_2$ & Adaptive tree Square & 69.69 & 60.13$\pm$1.60 & 51.10$\pm$0.56 & 57.48$\pm$3.02 & 29.81$\pm$0.45 & \textbf{26.41$\pm$1.57} & 29.94$\pm$1.38\\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+nslkdd,validate,base,,omega1,0.2,xgb,tabnet-cw-original,17250,54.19,0.14
+nslkdd,validate,base,,omega1,0.2,catb,tabnet-cw-original,17228,44.64,0.14
+nslkdd,validate,base,,omega1,0.2,gbm,tabnet-cw-original,17211,22.39,0.14
+nslkdd,validate,base,,omega1,0.2,bagging,tabnet-cw-original,17213,87.93,0.14
+nslkdd,validate,base,,omega1,0.2,dnn,tabnet-cw-original,17088,9.16,0.14
+nslkdd,validate,base,,omega1,0.2,tabnet,tabnet-cw-original,17073,31.23,0.14

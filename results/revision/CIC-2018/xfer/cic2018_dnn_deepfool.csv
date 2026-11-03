@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+cic2018,validate,base,,omega1,0.2,xgb,dnn-deepfool-original,49056,61.89,0.65
+cic2018,validate,base,,omega1,0.2,catb,dnn-deepfool-original,49033,78.68,0.65
+cic2018,validate,base,,omega1,0.2,gbm,dnn-deepfool-original,49039,68.86,0.65
+cic2018,validate,base,,omega1,0.2,bagging,dnn-deepfool-original,49036,77.97,0.65
+cic2018,validate,base,,omega1,0.2,dnn,dnn-deepfool-original,47747,100.0,0.65
+cic2018,validate,base,,omega1,0.2,tabnet,dnn-deepfool-original,47819,28.5,0.65

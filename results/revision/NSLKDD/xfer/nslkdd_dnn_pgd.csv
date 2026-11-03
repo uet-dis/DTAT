@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+nslkdd,validate,base,,omega1,0.2,xgb,dnn-pgd-original,17250,40.74,0.13
+nslkdd,validate,base,,omega1,0.2,catb,dnn-pgd-original,17228,43.13,0.13
+nslkdd,validate,base,,omega1,0.2,gbm,dnn-pgd-original,17211,37.54,0.13
+nslkdd,validate,base,,omega1,0.2,bagging,dnn-pgd-original,17213,57.74,0.13
+nslkdd,validate,base,,omega1,0.2,dnn,dnn-pgd-original,17088,58.18,0.13
+nslkdd,validate,base,,omega1,0.2,tabnet,dnn-pgd-original,17073,49.16,0.13

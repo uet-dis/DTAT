@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+cic2018,validate,base,,omega1,0.2,xgb,dnn-pgd-original,49056,70.97,0.66
+cic2018,validate,base,,omega1,0.2,catb,dnn-pgd-original,49033,81.4,0.66
+cic2018,validate,base,,omega1,0.2,gbm,dnn-pgd-original,49039,76.9,0.66
+cic2018,validate,base,,omega1,0.2,bagging,dnn-pgd-original,49036,81.67,0.66
+cic2018,validate,base,,omega1,0.2,dnn,dnn-pgd-original,47747,58.4,0.66
+cic2018,validate,base,,omega1,0.2,tabnet,dnn-pgd-original,47819,29.94,0.66

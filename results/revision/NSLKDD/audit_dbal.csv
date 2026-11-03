@@ -1,0 +1,6 @@
+dataset,source,n,viol_before_pct,viol_after_pct
+nslkdd,major:Benign,14000,0.0,0.0
+nslkdd,major:DoS,14000,0.02,0.0
+nslkdd,minor:Probe:wgan,14000,30.33,0.0
+nslkdd,minor:R2L:wgan,14000,81.31,0.0
+nslkdd,minor:U2R:wgan,14000,99.46,0.0

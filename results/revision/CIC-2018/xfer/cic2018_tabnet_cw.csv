@@ -1,0 +1,7 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,minutes
+cic2018,validate,base,,omega1,0.2,xgb,tabnet-cw-original,49056,26.66,0.8
+cic2018,validate,base,,omega1,0.2,catb,tabnet-cw-original,49033,4.63,0.8
+cic2018,validate,base,,omega1,0.2,gbm,tabnet-cw-original,49039,26.77,0.8
+cic2018,validate,base,,omega1,0.2,bagging,tabnet-cw-original,49036,5.56,0.8
+cic2018,validate,base,,omega1,0.2,dnn,tabnet-cw-original,47747,11.49,0.8
+cic2018,validate,base,,omega1,0.2,tabnet,tabnet-cw-original,47819,24.0,0.8

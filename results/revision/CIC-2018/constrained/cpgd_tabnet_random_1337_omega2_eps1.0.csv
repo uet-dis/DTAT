@@ -1,0 +1,8 @@
+dataset,experiment,variant,seed,level,eps,target,source,n_clean_correct,asr,iters,n_sample,queries,viol_pct,cap_viol_pct,minutes
+cic2018,cpgd,random,1337,omega2,1.0,xgb,clean-tabnet,4539,16.94,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,catb,clean-tabnet,4519,27.75,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,gbm,clean-tabnet,4518,22.86,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,bagging,clean-tabnet,4539,26.68,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,dnn,clean-tabnet,4411,45.57,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,tabnet,clean-tabnet,4406,37.09,100,4715,89585,0.0,0.0,2.18
+cic2018,cpgd,random,1337,omega2,1.0,ensemble-per-branch,clean-tabnet,4530,35.36,100,4715,89585,0.0,0.0,2.18
